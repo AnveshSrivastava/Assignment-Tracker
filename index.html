@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SeaMist | Assignment Tracker</title>
+    <meta name="description" content="Premium assignment tracking for students.">
+    <link rel="stylesheet" href="styles.css">
+    </head>
+<body data-theme="sea">
+
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
+    <div class="app-container">
+        <header>
+            <div class="brand">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h6"/><path d="M22 12h-6"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/><path d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"/></svg>
+                </div>
+                <h1>SeaMist Track</h1>
+            </div>
+
+            <div class="controls">
+                <select id="themeSelector" aria-label="Select Theme">
+                    <option value="sea">Deep Sea (Green/Gold)</option>
+                    <option value="sky">Horizon (Blue/White)</option>
+                    <option value="sand">Shoreline (Beige)</option>
+                </select>
+                <button id="btnExport" class="btn-icon" title="Export Data" aria-label="Export Data">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                </button>
+                <label for="fileImport" class="btn-icon" title="Import Data" tabindex="0" role="button" aria-label="Import Data">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    <input type="file" id="fileImport" accept=".json" hidden>
+                </label>
+                <button id="btnResetAll" class="btn-icon danger" title="Reset All" aria-label="Reset All Data">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                </button>
+            </div>
+        </header>
+
+        <section class="add-subject-area">
+            <div class="input-wrapper">
+                <input type="text" id="newSubjectInput" placeholder="Add new subject (e.g., Data Structures)..." aria-label="New Subject Name">
+                <button id="btnAddSubject" class="btn-primary">Add Subject</button>
+            </div>
+        </section>
+
+        <main id="subjectGrid" class="subject-grid">
+            </main>
+        
+        <div id="emptyState" class="empty-state hidden">
+            <div class="empty-icon">🌊</div>
+            <h3>The tide is low</h3>
+            <p>Add a subject above to start tracking your journey.</p>
+        </div>
+
+    </div>
+
+    <div id="toast" class="toast hidden">
+        <span id="toastMessage">Action completed</span>
+        <button id="toastUndo" class="btn-text">Undo</button>
+    </div>
+
+    <div id="modalOverlay" class="modal-overlay hidden">
+        <div class="modal">
+            <h3 id="modalTitle">Confirm</h3>
+            <p id="modalText">Are you sure?</p>
+            <div class="modal-actions">
+                <button id="modalCancel" class="btn-secondary">Cancel</button>
+                <button id="modalConfirm" class="btn-danger">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
