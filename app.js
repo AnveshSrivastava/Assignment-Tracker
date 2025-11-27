@@ -342,13 +342,27 @@ function hideToast() {
 }
 
 function exportData() {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState));
+    // 1. Pretty print the JSON so it's readable in the text file
+    const dataStr = JSON.stringify(appState, null, 2);
+    
+    // 2. Create a Blob (Binary Large Object) with text/plain type
+    // Mobile browsers handle Blobs much better than data URIs
+    const blob = new Blob([dataStr], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    
+    // 3. Create download link
     const downloadAnchorNode = document.createElement('a');
-    downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", "seamist_backup.json");
+    downloadAnchorNode.href = url;
+    // Changed extension to .txt for mobile compatibility
+    downloadAnchorNode.download = `seamist_backup_${new Date().toISOString().slice(0,10)}.txt`;
+    
+    // 4. Trigger download
     document.body.appendChild(downloadAnchorNode);
     downloadAnchorNode.click();
-    downloadAnchorNode.remove();
+    
+    // 5. Cleanup (important for memory)
+    document.body.removeChild(downloadAnchorNode);
+    URL.revokeObjectURL(url);
 }
 
 function importData(event) {
@@ -358,7 +372,9 @@ function importData(event) {
     const reader = new FileReader();
     reader.onload = (e) => {
         try {
+            // Text files contain the same string data, so JSON.parse still works
             const parsed = JSON.parse(e.target.result);
+            
             if (parsed.subjects && Array.isArray(parsed.subjects)) {
                 showModal("Import Data", "This will overwrite your current data.", () => {
                     appState = parsed;
@@ -369,12 +385,14 @@ function importData(event) {
                     showToast("Data imported successfully");
                 });
             } else {
-                alert("Invalid JSON format.");
+                alert("Invalid backup file format.");
             }
         } catch (ex) {
-            alert("Error reading file.");
+            console.error(ex);
+            alert("Error reading file. Make sure it is a valid backup .txt file.");
         }
     };
+    // This reads the .txt file content nicely
     reader.readAsText(file);
-    event.target.value = ''; // Reset input
+    event.target.value = ''; // Reset input so you can reload same file if needed
 }
