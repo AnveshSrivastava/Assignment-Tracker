@@ -207,7 +207,14 @@ function createSubjectCard(subject) {
     const btnReset = document.createElement('button');
     btnReset.className = 'btn-mini';
     btnReset.textContent = 'Reset';
-    btnReset.addEventListener('click', () => showModal('Reset Subject?', 'Clear all progress for this subject?', () => resetSubject(subject.id)));
+    btnReset.addEventListener('click', () => {
+        const isAlreadyEmpty = subject.assignments.every(status => status === 0);
+        if (isAlreadyEmpty) {
+            showToast("Nothing to reset here");
+            return;
+        }
+        showModal('Reset Subject?', 'Clear all progress for this subject?', () => resetSubject(subject.id))
+    });
 
     const btnDel = document.createElement('button');
     btnDel.className = 'btn-mini delete';
@@ -273,6 +280,10 @@ function initEventListeners() {
 
     // Reset All
     document.getElementById('btnResetAll').addEventListener('click', () => {
+        if (appState.subjects.length === 0) {
+            showToast("The shore is already clear");
+            return;
+        }
         showModal('Factory Reset', 'This will delete ALL data. Cannot be undone.', () => {
             appState.subjects = [];
             saveData();
